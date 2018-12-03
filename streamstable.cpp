@@ -6,11 +6,8 @@ StreamsTable::StreamsTable() {
 
 double StreamsTable::fErlang(double y, int v) {
     double p = 1;
-    if (v == 0) {
-        return p;
-    }
-    for (int i = 0; i < v; ++i) {
-        p = 1 + p * v / y;
+    for (int i = 1; i < v; ++i) {
+        p = 1 + p * i / y;
     }
     return 1 / p;
 }
