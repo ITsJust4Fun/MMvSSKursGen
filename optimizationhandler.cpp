@@ -37,6 +37,7 @@ double OptimizationHandler::getWaySum(QTableWidget* nextTable, QTableWidget* del
         sum += delTable->item((k - 1), (j - 1))->text().toDouble();
         k = nextTable->item((k - 1), (j - 1))->text().toInt();
     }
+    sum += delTable->item((k - 1), (j - 1))->text().toDouble();
     return sum;
 }
 
@@ -110,6 +111,7 @@ void OptimizationHandler::mkOptimization(int x, int y) {
 
         double b = boTable->item(mi, mj)->text().toDouble();
         boTable->item(mi, mj)->setText(QString::number(b + dc));
+        boTable->item(mj, mi)->setText(QString::number(b + dc));
     } while(m0 < Oprev);
 }
 
