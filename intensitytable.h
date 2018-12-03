@@ -11,6 +11,7 @@ public:
     virtual void initTable();
     virtual ~IntensityTable();
     double ySum(int i, int j);
+    double ytotal;
     QTableWidget* inputTable = nullptr;
     QTableWidget* inputNumTable = nullptr;
 private:

@@ -1,5 +1,4 @@
 #include "intensitytable.h"
-#include <QDebug>
 
 IntensityTable::IntensityTable(QTableWidget* inputTable,
                                QTableWidget* inputNumTable) {
@@ -19,17 +18,18 @@ void IntensityTable::initTable() {
 
 double IntensityTable::ySum(int i, int j) {
     double ysum = 0;
+    if(inputTable->item(0, 0)->text() == "0") {
+        return ytotal;
+    }
     if(inputTable->item((i - 1), (j - 1))->text() == "") {
         return INFINITY;
-    }
-    if(inputTable->item(0, 0)->text() == "0") {
-        return inputNumTable->item((i - 1), 0)->text().toDouble() * 0.1;
     }
     int k = i;
     while(k != j) {
         ysum += inputNumTable->item((k - 1), 0)->text().toDouble() * 0.1;
         k = inputTable->item((k - 1), (j - 1))->text().toInt();
     }
+    ysum += inputNumTable->item((k - 1), 0)->text().toDouble() * 0.1;
     return ysum;
 }
 
@@ -44,24 +44,24 @@ void IntensityTable::changeData(int x, int y) {
                          inputTable->columnCount() - 1)->text() == "") {
         return;
     }
-    double ysum = 0;
+
+    ytotal = 0;
     for(int i = 0; i < inputNumTable->rowCount(); i++) {
-        ysum += inputNumTable->item(i, 0)->text().toDouble() * 0.1;
+        ytotal += inputNumTable->item(i, 0)->text().toDouble() * 0.1;
     }
     for(int i = 0; i < inputTable->rowCount(); i++) {
         for(int j = 0; j < inputTable->columnCount(); j++) {
-            QString val = inputTable->item(i, j)->text();
-            if(val != "") {
-                double yj = inputNumTable->item(j, 0)->text().toDouble() * 0.1;
-                double yij;
-                //if (i != j) {
-                    double kij = yj / ysum;//ySum(i + 1, j + 1);
-                    yij = kij * inputNumTable->item(i, 0)->text().toDouble() * 0.1;
-                /*} else {
-                    yij = inputNumTable->item(i, 0)->text().toDouble() * 0.1;
-                }*/
-                table->item(i, j)->setText(QString::number(yij));
+            //QString val = inputTable->item(i, j)->text();
+            double yj = inputNumTable->item(j, 0)->text().toDouble() * 0.1;
+            double yi = inputNumTable->item(i, 0)->text().toDouble() * 0.1;
+            double yij;
+            if (i != j) {
+                double kj = yj / ySum(i + 1, j + 1);
+                yij = kj * yi;
+            } else {
+                yij = (yi * yj) / ytotal;
             }
+            table->item(i, j)->setText(QString::number(yij));
         }
     }
     Q_UNUSED(x);
