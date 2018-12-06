@@ -62,7 +62,7 @@ void OptimizationHandler::calcOTable(QTableWidget* dlTable, QTableWidget* oTable
 }
 
 void OptimizationHandler::mkOptimization(int x, int y) {
-    QTableWidget* dtTable = dynamic_cast<QTableWidget*>(QObject::sender());
+    /*QTableWidget* dtTable = dynamic_cast<QTableWidget*>(QObject::sender());
     if(dtTable->item(dtTable->rowCount() - 1, dtTable->columnCount() - 1)->text() == "") {
         return;
     }
@@ -112,7 +112,7 @@ void OptimizationHandler::mkOptimization(int x, int y) {
         double b = boTable->item(mi, mj)->text().toDouble();
         boTable->item(mi, mj)->setText(QString::number(b + dc));
         boTable->item(mj, mi)->setText(QString::number(b + dc));
-    } while(m0 < Oprev);
+    } while(m0 < Oprev);*/
 }
 
 OptimizationHandler::~OptimizationHandler() {

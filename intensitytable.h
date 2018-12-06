@@ -10,7 +10,7 @@ public:
     IntensityTable(QTableWidget*, QTableWidget*);
     virtual void initTable();
     virtual ~IntensityTable();
-    double ySum(int i, int j);
+    void addToWay(int i, int j);
     double ytotal;
     QTableWidget* inputTable = nullptr;
     QTableWidget* inputNumTable = nullptr;

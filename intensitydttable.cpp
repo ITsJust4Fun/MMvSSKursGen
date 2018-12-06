@@ -9,7 +9,7 @@ void IntensityDTTable::changeData(int x, int y) {
     if(streamsTable->item(x, y)->text() == "") {
         return;
     }
-    double a0 = 85.6 / 8;
+    double a0 = 85600;
     double a = streamsTable->item(x, y)->text().toDouble() * a0;
     table->item(x, y)->setText(QString::number(a));
 }

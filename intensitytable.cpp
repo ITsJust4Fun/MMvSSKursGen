@@ -16,21 +16,27 @@ void IntensityTable::initTable() {
     }
 }
 
-double IntensityTable::ySum(int i, int j) {
-    double ysum = 0;
-    if(inputTable->item(0, 0)->text() == "0") {
-        return ytotal;
+void IntensityTable::addToWay(int i, int j) {
+    if(inputTable->item(i - 1, j - 1)->text() == "") {
+        return;
     }
-    if(inputTable->item((i - 1), (j - 1))->text() == "") {
-        return INFINITY;
+    double y = inputNumTable->item(i - 1, j - 1)->text().toDouble();
+    if(i == j) {
+        table->item(i - 1, j - 1)->setText(QString::number(y));
+        return;
     }
     int k = i;
+    int nextK = j;
     while(k != j) {
-        ysum += inputNumTable->item((k - 1), 0)->text().toDouble() * 0.1;
-        k = inputTable->item((k - 1), (j - 1))->text().toInt();
+        nextK = inputTable->item(k - 1, j - 1)->text().toInt();
+        if(table->item(k - 1, nextK - 1)->text() == "") {
+            table->item(k - 1, nextK - 1)->setText(QString::number(y));
+        } else {
+            double prev = table->item(k - 1, nextK - 1)->text().toDouble();
+            table->item(k - 1, nextK - 1)->setText(QString::number(prev + y));
+        }
+        k = inputTable->item(k - 1, j - 1)->text().toInt();
     }
-    ysum += inputNumTable->item((k - 1), 0)->text().toDouble() * 0.1;
-    return ysum;
 }
 
 void IntensityTable::changeData(int x, int y) {
@@ -40,6 +46,14 @@ void IntensityTable::changeData(int x, int y) {
     if (inputNumTable->item(inputNumTable->rowCount() - 1, 0)->text() == "") {
         return;
     }
+
+    if (inputNumTable->item(0, 0)->text().contains('.')) {
+        if (inputNumTable->item(inputNumTable->rowCount() - 1,
+                                inputNumTable->columnCount() - 1)->text() == "") {
+            return;
+        }
+    }
+
     if (inputTable->item(inputTable->rowCount() - 1,
                          inputTable->columnCount() - 1)->text() == "") {
         return;
@@ -49,19 +63,21 @@ void IntensityTable::changeData(int x, int y) {
     for(int i = 0; i < inputNumTable->rowCount(); i++) {
         ytotal += inputNumTable->item(i, 0)->text().toDouble() * 0.1;
     }
-    for(int i = 0; i < inputTable->rowCount(); i++) {
-        for(int j = 0; j < inputTable->columnCount(); j++) {
-            //QString val = inputTable->item(i, j)->text();
-            double yj = inputNumTable->item(j, 0)->text().toDouble() * 0.1;
-            double yi = inputNumTable->item(i, 0)->text().toDouble() * 0.1;
-            double yij;
-            if (i != j) {
-                double kj = yj / ySum(i + 1, j + 1);
-                yij = kj * yi;
-            } else {
+    if(inputTable->item(0, 0)->text() == "0") {
+        for(int i = 0; i < inputTable->rowCount(); i++) {
+            for(int j = 0; j < inputTable->columnCount(); j++) {
+                double yj = inputNumTable->item(j, 0)->text().toDouble() * 0.1;
+                double yi = inputNumTable->item(i, 0)->text().toDouble() * 0.1;
+                double yij;
                 yij = (yi * yj) / ytotal;
+                table->item(i, j)->setText(QString::number(yij));
             }
-            table->item(i, j)->setText(QString::number(yij));
+        }
+    } else {
+        for(int i = 0; i < inputTable->rowCount(); i++) {
+            for(int j = 0; j < inputTable->columnCount(); j++) {
+                addToWay(i + 1, j + 1);
+            }
         }
     }
     Q_UNUSED(x);

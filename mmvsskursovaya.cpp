@@ -35,7 +35,7 @@ void MMvSSKursovaya::initWidgets() {
     nextTable->initTable();
     shortestTable = new ShortestTable(nextTable->table);
     shortestTable->initTable();
-    intensityTable2 = new IntensityTable(nextTable->table, inputNumTable->table);
+    intensityTable2 = new IntensityTable(nextTable->table, intensityTable->table);
     intensityTable2->initTable();
     streamsTable = new StreamsTable();
     streamsTable->initTable();
@@ -75,9 +75,9 @@ void MMvSSKursovaya::initWidgets() {
                      shortestTable, SLOT(changeData(int, int)));
 
 
-    QObject::connect(shortestTable->table, SIGNAL(cellChanged(int, int)),
+    QObject::connect(nextTable->table, SIGNAL(cellChanged(int, int)),
                      intensityTable2, SLOT(changeData(int, int)));
-    QObject::connect(inputNumTable->table, SIGNAL(cellChanged(int, int)),
+    QObject::connect(intensityTable->table, SIGNAL(cellChanged(int, int)),
                      intensityTable2, SLOT(changeData(int, int)));
 
 

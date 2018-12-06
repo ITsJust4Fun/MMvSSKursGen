@@ -29,7 +29,7 @@ void StreamsTable::changeData(int x, int y) {
         v++;
         p = fErlang(s, v);
     }
-    table->item(x, y)->setText(QString::number(v));
+    table->item(x, y)->setText(QString::number(v - 1));
 }
 
 StreamsTable::~StreamsTable() {

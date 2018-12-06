@@ -10,7 +10,7 @@ void BandwidthTable::changeData(int x, int y) {
         return;
     }
     double aij = intensityDTTable->item(x, y)->text().toDouble();
-    double L = 200 / 1024.0;
+    double L = 200 * 8;
     double T0 = 0.1;
     table->item(x, y)->setText(QString::number(aij + L/T0));
 }
