@@ -11,7 +11,7 @@ void IntensityDTTable::changeData(int x, int y) {
     }
     double a0 = 85600;
     double a = streamsTable->item(x, y)->text().toDouble() * a0;
-    table->item(x, y)->setText(QString::number(a));
+    table->item(x, y)->setText(QString::number(a, 'g', 15));
 }
 
 IntensityDTTable::~IntensityDTTable() {

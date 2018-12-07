@@ -15,13 +15,18 @@ void OptimizationHandler::copyToBo(QTableWidget* bandwidthTable,
 }
 
 void OptimizationHandler::calcDelTable(QTableWidget* intensityDTTable, QTableWidget* boTable,
-                                       QTableWidget* delTable, double dc) {
-    double L = 200 / 1024.0;
+                                       QTableWidget* delTable, double dc, int x, int y) {
+    double L = 200 * 8;
     for(int i = 0; i < delTable->rowCount(); i++) {
         for(int j = 0; j < delTable->columnCount(); j++) {
-            double bm = boTable->item(i, j)->text().toDouble();
-            double am = intensityDTTable->item(i, j)->text().toDouble();
-            delTable->item(i, j)->setText(QString::number(L / (bm + dc - am)));
+            if(boTable->item(i, j)->text() != "") {
+                double bm = boTable->item(i, j)->text().toDouble();
+                double am = intensityDTTable->item(i, j)->text().toDouble();
+                if((i == x) && (j == y)) {
+                    bm += dc;
+                }
+                delTable->item(i, j)->setText(QString::number(L / (bm - am), 'g', 15));
+            }
         }
     }
 }
@@ -29,15 +34,17 @@ void OptimizationHandler::calcDelTable(QTableWidget* intensityDTTable, QTableWid
 double OptimizationHandler::getWaySum(QTableWidget* nextTable, QTableWidget* delTable,
                                       int i, int j) {
     double sum = 0;
-    if(nextTable->item((i - 1), (j - 1))->text() == "") {
-        return INFINITY;
+    if(i == j) {
+        sum = delTable->item(i - 1, j - 1)->text().toDouble();
+        return sum;
     }
     int k = i;
+    int nextK = j;
     while(k != j) {
-        sum += delTable->item((k - 1), (j - 1))->text().toDouble();
-        k = nextTable->item((k - 1), (j - 1))->text().toInt();
+        nextK = nextTable->item(k - 1, j - 1)->text().toInt();
+        sum += delTable->item(k - 1, nextK - 1)->text().toDouble();
+        k = nextK;
     }
-    sum += delTable->item((k - 1), (j - 1))->text().toDouble();
     return sum;
 }
 
@@ -46,23 +53,25 @@ void OptimizationHandler::calcDlTable(QTableWidget* nextTable, QTableWidget* del
     for(int i = 0; i < dlTable->rowCount(); i++) {
         for(int j = 0; j < dlTable->columnCount(); j++) {
             dlTable->item(i, j)->setText(QString::number(getWaySum(nextTable , delTable,
-                                                                   (i + 1), (j + 1))));
+                                                                   (i + 1), (j + 1)), 'g', 15));
         }
     }
 }
 
-void OptimizationHandler::calcOTable(QTableWidget* dlTable, QTableWidget* oTable) {
+void OptimizationHandler::calcOTable(QTableWidget* dlTable, QTableWidget* oTable, int x, int y) {
     double Topt = 0.05;
+    double sum = 0;
     for(int i = 0; i < dlTable->rowCount(); i++) {
         for(int j = 0; j < dlTable->columnCount(); j++) {
             double dlij = dlTable->item(i, j)->text().toDouble();
-            oTable->item(i, j)->setText(QString::number(pow(dlij - Topt , 2.0)));
+            sum += pow(dlij - Topt , 2.0);
         }
     }
+    oTable->item(x, y)->setText(QString::number(sum, 'g', 15));
 }
 
 void OptimizationHandler::mkOptimization(int x, int y) {
-    /*QTableWidget* dtTable = dynamic_cast<QTableWidget*>(QObject::sender());
+    QTableWidget* dtTable = dynamic_cast<QTableWidget*>(QObject::sender());
     if(dtTable->item(dtTable->rowCount() - 1, dtTable->columnCount() - 1)->text() == "") {
         return;
     }
@@ -79,40 +88,55 @@ void OptimizationHandler::mkOptimization(int x, int y) {
     QTableWidget* dlTable = (*list)[5];
     QTableWidget* oTable = (*list)[6];
 
+    OptimizationProgressBar progressBar;
+    progressBar.show();
+
     copyToBo(bandwidthTable, boTable);
 
-    double dc = (10000 / 1024.0) / 8.0;
+    double dc = 10000;
     double Oprev = INFINITY;
     double m0 = INFINITY;
 
+    int cycles = 0;
+
     do {
+        progressBar.changeLabel("Please Wait... (cycles = " + QString::number(++cycles) + ")");
+        progressBar.setValue(cycles);
         Oprev = m0;
 
-        calcDelTable(intensityDTTable, boTable, delTable, dc);
+        for(int i = 0; i < boTable->rowCount(); i++) {
+            for(int j = 0; j < boTable->columnCount(); j++) {
+                if(boTable->item(i, j)->text() != "") {
+                    calcDelTable(intensityDTTable, boTable, delTable, dc, i, j);
+                    calcDlTable(nextTable, delTable, dlTable);
+                    calcOTable(dlTable, oTable, i, j);
+                }
+            }
+        }
 
-        calcDlTable(nextTable, delTable, dlTable);
-
-        calcOTable(dlTable, oTable);
-
-        m0 = oTable->item(0, 1)->text().toDouble();
         int mi = 0;
-        int mj = 1;
+        int mj = 0;
+        m0 = oTable->item(mi, mj)->text().toDouble();
 
         for(int i = 0; i < oTable->rowCount(); i++) {
             for(int j = 0; j < oTable->columnCount(); j++) {
-                double tmp = oTable->item(i, j)->text().toDouble();
-                if(tmp < m0) {
-                    m0 = tmp;
-                    mi = i;
-                    mj = j;
+                if(oTable->item(i, j)->text() != "") {
+                    double tmp = oTable->item(i, j)->text().toDouble();
+                    if(tmp < m0) {
+                        m0 = tmp;
+                        mi = i;
+                        mj = j;
+                    }
                 }
             }
         }
 
         double b = boTable->item(mi, mj)->text().toDouble();
-        boTable->item(mi, mj)->setText(QString::number(b + dc));
-        boTable->item(mj, mi)->setText(QString::number(b + dc));
-    } while(m0 < Oprev);*/
+        boTable->item(mi, mj)->setText(QString::number(b + dc, 'g', 15));
+        QCoreApplication::processEvents();
+    } while(m0 < Oprev);
+    progressBar.setValue(650);
+    progressBar.close();
 }
 
 OptimizationHandler::~OptimizationHandler() {

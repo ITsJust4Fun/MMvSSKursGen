@@ -29,7 +29,7 @@ public:
     void initWindowElements();
     void initWidgets();
     MMvSSKursovaya(QWidget *parent = nullptr);
-    ~MMvSSKursovaya();
+    virtual ~MMvSSKursovaya();
 private:
     QList<QScreen*> screens;
     QTabWidget* tabWidget;

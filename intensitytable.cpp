@@ -35,7 +35,7 @@ void IntensityTable::addToWay(int i, int j) {
             double prev = table->item(k - 1, nextK - 1)->text().toDouble();
             table->item(k - 1, nextK - 1)->setText(QString::number(prev + y));
         }
-        k = inputTable->item(k - 1, j - 1)->text().toInt();
+        k = nextK;
     }
 }
 

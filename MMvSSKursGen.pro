@@ -34,7 +34,8 @@ SOURCES += \
     streamstable.cpp \
     intensitydttable.cpp \
     bandwidthtable.cpp \
-    optimizationhandler.cpp
+    optimizationhandler.cpp \
+    optimizationprogressbar.cpp
 
 HEADERS += \
         mmvsskursovaya.h \
@@ -45,7 +46,8 @@ HEADERS += \
     streamstable.h \
     intensitydttable.h \
     bandwidthtable.h \
-    optimizationhandler.h
+    optimizationhandler.h \
+    optimizationprogressbar.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

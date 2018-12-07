@@ -17,7 +17,6 @@ void ShortestTable::changeData(int x, int y) {
             table->item(i, j)->setText(inputTable->item(i, j)->text());
         }
     }
-    //table->item(table->rowCount() - 1, table->columnCount() - 1)->setText("-1");
     for(int k = 0; k < table->rowCount(); k++) {
         for(int i = 0; i < table->rowCount(); i++) {
             for(int j = 0; j < table->rowCount(); j++) {
@@ -37,7 +36,6 @@ void ShortestTable::changeData(int x, int y) {
             }
         }
     }
-    //table->item(table->rowCount() - 1, table->columnCount() - 1)->setText("0");
     for(int i = 0; i < table->rowCount(); i++) {
         for(int j = 0; j < table->columnCount(); j++) {
             QString value = table->item(i, j)->text();
@@ -46,7 +44,6 @@ void ShortestTable::changeData(int x, int y) {
             }
         }
     }
-
     Q_UNUSED(x);
     Q_UNUSED(y);
 }

@@ -7,7 +7,7 @@ class IntensityDTTable : public IntensityTable {
     Q_OBJECT
 public:
     IntensityDTTable();
-    ~IntensityDTTable();
+    virtual ~IntensityDTTable();
 
 signals:
 
