@@ -64,7 +64,7 @@ void OptimizationHandler::calcOTable(QTableWidget* dlTable, QTableWidget* oTable
     for(int i = 0; i < dlTable->rowCount(); i++) {
         for(int j = 0; j < dlTable->columnCount(); j++) {
             double dlij = dlTable->item(i, j)->text().toDouble();
-            sum += pow(dlij - Topt , 2.0);
+            sum += (dlij - Topt) * (dlij - Topt);
         }
     }
     oTable->item(x, y)->setText(QString::number(sum, 'g', 15));
