@@ -23,11 +23,11 @@ void ShortestTable::changeData(int x, int y) {
                 QString val1 = table->item(i, j)->text();
                 QString val2 = table->item(i, k)->text();
                 QString val3 = table->item(k, j)->text();
-                double w1 = val1 != "" ? val1.toDouble() : INFINITY;
-                double w2 = val2 != "" ? val2.toDouble() : INFINITY;
-                double w3 = val3 != "" ? val3.toDouble() : INFINITY;
+                double w1 = val1 != "" ? val1.toDouble() : Q_INFINITY;
+                double w2 = val2 != "" ? val2.toDouble() : Q_INFINITY;
+                double w3 = val3 != "" ? val3.toDouble() : Q_INFINITY;
                 double s = w1 < (w2 + w3) ? w1 : w2 + w3;
-                if(s != INFINITY) {
+                if(s != Q_INFINITY) {
                     table->item(i, j)->setText(QString::number(s));
                 }
                 if ((w2 + w3) < w1) {

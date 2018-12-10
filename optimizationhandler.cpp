@@ -94,8 +94,8 @@ void OptimizationHandler::mkOptimization(int x, int y) {
     copyToBo(bandwidthTable, boTable);
 
     double dc = 10000;
-    double Oprev = INFINITY;
-    double m0 = INFINITY;
+    double Oprev = Q_INFINITY;
+    double m0 = Q_INFINITY;
 
     int cycles = 0;
 

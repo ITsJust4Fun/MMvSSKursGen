@@ -19,7 +19,7 @@ void StreamsTable::changeData(int x, int y) {
     }
     double s = intensityTable->item(x, y)->text().toDouble();
     if(s <= 0){
-        table->item(x, y)->setText(QString::number(INFINITY));
+        table->item(x, y)->setText(QString::number(Q_INFINITY));
         return;
     }
     double p0 = 1 - (98.0/100);
